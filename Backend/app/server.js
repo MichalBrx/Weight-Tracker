@@ -1,34 +1,26 @@
 const express = require('express')
-const bcrypt = require('bcrypt')
 const app = express()
+const bcrypt = require('bcrypt')
+const bodyParser = require('body-parser')
+const createUser = require('./models/users')
 
-app.use(express.json())
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 
 const users = []
 
 app.get('/users', (req,res) => {
-    res.json(users)
+    createUser.find()
+        .then(users => {res.status(200).json(users)})
+        .catch(error => {
+            res.status(500).json({message: 'unable to display'})
+        })
 })
 
-app.post('/users', async (req, res) => {
-    try{
-        const salt = await bcrypt.genSalt()
-        const hashedPassword = await bcrypt.hash(req.body.password, salt)
-        console.log(salt)
-        console.log(hashedPassword)
-
-        const user ={ name: req.body.name, password: hashedPassword}
-        users.push(user)
-        res.status(201).send()
-    } catch {
-        res.status(500).send()
-    }
-
-
-})
 
 app.post('/login', async (req, res) => {
-    const user = users.find(user => user.name = req.body.name)
+    const user = users.find(user => user.name === req.body.name)
+    console.log(user)
     if ( user == null) {
         return res.status(400).send("Not Found")
     }
@@ -42,6 +34,24 @@ app.post('/login', async (req, res) => {
     } catch {
         res.status(500).send()
     }
+})
+
+app.post('/register', async (req,res) => {
+
+
+    try {
+        const salt = await bcrypt.genSalt()
+        const hashedPassword = await bcrypt.hash(req.body.password, salt)
+        const newUser = {name: req.body.name, password: hashedPassword, email: req.body.email} 
+
+        createUser.add(newUser).then(user => { res.status(200).json(user)})
+
+    }
+    catch {
+        res.status(500).json({message: "cannot add new User"})
+    }
+    
+
 })
 
 app.listen(3000)
