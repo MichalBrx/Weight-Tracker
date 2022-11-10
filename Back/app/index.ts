@@ -1,66 +1,71 @@
-import express from 'express'
-import { PrismaClient } from '@prisma/client'
-import { Response } from 'express'
+import express from "express";
+import { PrismaClient } from "@prisma/client";
+import { Response } from "express";
 
-import { get_user_by_email } from './crud/user'
-import { newUser } from './interfaces'
-import { createAccessToken, generateAccessToken, authenticateToken } from './jwt/jwt'
+import { newUser } from "./interfaces";
+import { generateAccessToken, authenticateToken } from "./jwt/jwt";
 
+require("dotenv").config();
 
-require('dotenv').config()
+const app = express();
+// const bodyParser = require('body-parser')
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
-const app = express()
-const bcrypt = require('bcrypt')
-const bodyParser = require('body-parser')
-const jwt = require('jsonwebtoken')
+const register = require("./routers/register");
+const login = require("./routers/login");
 
-const register = require('./routers/register')
-const login = require('./routers/login')
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
-
-
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
 
 declare global {
-    namespace Express {
-      interface Request {
-        user: newUser;
-      }
+  namespace Express {
+    interface Request {
+      user: newUser;
     }
   }
+}
 
-app.use("/", register)
-app.use("/", login)
+app.use("/", register);
+app.use("/", login);
 
+// nie dziala
+app.post("/token", (req, res: Response) => {
+  const { cookies } = req;
+  const refreshToken = req.body.token;
 
+  console.log(
+    refreshToken,
+    "=============================",
+    cookies.refreshToken
+  );
 
-app.post('/token', (req, res: Response) => {
-    const refreshToken = req.headers.authorization
-    const token = refreshToken && refreshToken.split(' ')[1]
-    if (token == null) return res.sendStatus(401)
-    if (!token.includes(token)) return res.sendStatus(403)
-    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err: any, user:newUser) => {
-        console.log(token)
-        if(err) return res.sendStatus(403)
-        const accessToken = generateAccessToken({ name: user.name})
-        res.json({ accessToken: accessToken })
-    })
-})
+  if (refreshToken == null) return res.sendStatus(401);
+  if (cookies.refreshToken !== refreshToken) return res.sendStatus(403);
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    (err: any, user: newUser) => {
+      if (err) return res.status(403).send({ error: err });
+      const accessToken = generateAccessToken({ name: user.name });
+      res.json({ accessToken: accessToken });
+    }
+  );
+});
 
-app.get('/users',authenticateToken, async (req, res) => {
-
-    const users = await prisma.user.findMany()
-    res.json(users.filter(user => user.email === req.user.email))
-})
-
-
-
-
+app.get("/users", authenticateToken, async (req, res) => {
+  const users = await prisma.user.findMany();
+  res.json(users);
+  // res.json(users.filter(user => user.email === req.user.email)) returns current logged user'a
+});
 
 const server = app.listen(3000, () =>
-console.log(`
+  console.log(`
 🚀 Server ready at: http://localhost:3000
-⭐️ See sample requests: http://pris.ly/e/ts/rest-express#3-using-the-rest-api`),
-)
+⭐️ See sample requests: http://pris.ly/e/ts/rest-express#3-using-the-rest-api`)
+);
