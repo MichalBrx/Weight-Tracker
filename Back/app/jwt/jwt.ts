@@ -4,12 +4,14 @@ import { newUser } from "../interfaces";
 const jwt = require("jsonwebtoken");
 
 function generateAccessToken(user: any) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "3000s",
+  });
 }
 function createAccessToken(user: any, res: Response) {
   const accessToken = generateAccessToken(user);
   const refreshToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-  res.cookie("refreshToken", refreshToken);
+  res.cookie("accessToken", accessToken);
   res.status(200).json({ user: user });
 }
 

@@ -1,29 +1,25 @@
 const express = require("express");
 const router = express.Router();
 
-import { PrismaClient } from "@prisma/client";
 import { createAccessToken } from "../jwt/jwt";
-import { Request, Response, NextFunction } from "express";
-import { get_user_by_email } from "../crud/user";
+import { Response } from "express";
 
-const bcrypt = require("bcrypt");
-
-const prisma = new PrismaClient();
+import { LogginIn } from "../models/user";
 
 router.post("/login", async (req: any, res: Response) => {
-  const user = await get_user_by_email(req.body.email);
+  const { email, password } = req.body;
 
-  if (user === null) {
-    return res.status(400).send("Cannot find user");
-  }
   try {
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      createAccessToken(user, res);
+    const user = await LogginIn(email, password);
+    createAccessToken(user, res);
+  } catch (err) {
+    if (email == "" || password == "") {
+      res.status(406).json({ message: "Please fill empty fileds" });
+    } else if (err) {
+      res.status(406).json({ message: "Invalid Crednetials" });
     } else {
-      res.send("Not Allowed");
+      res.status(404).json({ message: "Not known error" });
     }
-  } catch {
-    res.status(422).send();
   }
 });
 

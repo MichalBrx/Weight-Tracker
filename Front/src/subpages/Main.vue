@@ -1,8 +1,16 @@
 <script>
 import Forms from "../components/Forms.vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+const router = useRouter();
 
 export default {
   name: "Main",
+  data() {
+    return {
+      info: {},
+    };
+  },
   components: {
     Forms,
   },
@@ -14,6 +22,29 @@ export default {
       document.getElementById("mySidenav").style.width = "0";
     },
   },
+  async mounted() {
+    // async getUser() {
+    //   var config = {
+    //     method: "get",
+    //     url: "http://localhost:3000/user",
+    //   };
+    //   await axios(config)
+    //     .then((res) => {
+    //       this.info = res;
+    //     })
+    //     .catch((e) => {
+    //       console.log(e);
+    //     });
+    // },
+    await axios
+      .get("http://localhost:3000/user")
+      .then((res) => {
+        this.info = res;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  },
 };
 </script>
 
@@ -21,20 +52,7 @@ export default {
   <div id="container">
     <div
       id="NavBar"
-      class="
-        w-full
-        h-16
-        bg-violet-900
-        flex
-        justify-center
-        items-center
-        text-white
-        font-semibold
-        text-2xl
-        font-mono
-        px-3
-        md:px-60
-      "
+      class="w-full h-16 bg-violet-900 flex justify-center items-center text-white font-semibold text-2xl font-mono px-3 md:px-60"
     >
       <h1 class="w-full flex justify-center">Weight Tracker</h1>
       <label class="drawer-button btn btn-primary md:hidden w-10 h-10">
@@ -45,20 +63,7 @@ export default {
     <!-- MOBILE -->
     <div
       id="mySidenav"
-      class="
-        fixed
-        w-0
-        top-0
-        right-0
-        overflow-x-hidden
-        pt-16
-        duration-150
-        z-50
-        bg-violet-200
-        shadow-md
-        h-full
-        md:hidden
-      "
+      class="fixed w-0 top-0 right-0 overflow-x-hidden pt-16 duration-150 z-50 bg-violet-200 shadow-md h-full md:hidden"
     >
       <div class="flex w-full justify-start ml-5">
         <a
@@ -117,18 +122,7 @@ export default {
                 class="border w-48 p-1 px-3"
               />
               <button
-                class="
-                  mb-4
-                  p-2
-                  bg-violet-900
-                  text-violet-200
-                  px-10
-                  font-semibold
-                  rounded-md
-                  max-h-10
-                  duration-150
-                  active:scale-110 active:bg-violet-200 active:text-violet-900
-                "
+                class="mb-4 p-2 bg-violet-900 text-violet-200 px-10 font-semibold rounded-md max-h-10 duration-150 active:scale-110 active:bg-violet-200 active:text-violet-900"
               >
                 ADD
               </button>
@@ -147,18 +141,7 @@ export default {
                 class="border w-48 p-1 px-3"
               />
               <button
-                class="
-                  mb-4
-                  p-2
-                  bg-violet-900
-                  text-violet-200
-                  px-10
-                  font-semibold
-                  rounded-md
-                  max-h-10
-                  duration-150
-                  active:scale-110 active:bg-violet-200 active:text-violet-900
-                "
+                class="mb-4 p-2 bg-violet-900 text-violet-200 px-10 font-semibold rounded-md max-h-10 duration-150 active:scale-110 active:bg-violet-200 active:text-violet-900"
               >
                 ADD
               </button>
@@ -210,20 +193,13 @@ export default {
     <!-- DESKTOP -->
     <div
       id="ToolBar"
-      class="
-        md:grid
-        hidden
-        justify-between
-        w-full
-        grid-cols-11 grid-rows-1
-        auto-cols-max
-      "
+      class="md:grid hidden justify-between w-full grid-cols-11 grid-rows-1 auto-cols-max"
     >
       <div
         id="content"
         class="w-full p-10 col-span-9 justify-center flex flex-wrap"
       >
-        <h1 class="m-5 text-3xl w-full text-center">Hello {user}</h1>
+        <h1 class="m-2 text-3xl w-full text-center">Hello {user}</h1>
 
         <Forms />
 
@@ -268,25 +244,48 @@ export default {
         </div>
       </div>
 
-      <div class="flex justify-end w-full col-span-2">
-        <div class="w-48 h-full bg-violet-200">
+      <div class="flex justify-end w-full col-span-2 h-96">
+        <div class="w-48 bg-violet-200 rounded-bl-lg">
           <div class="flex justify-end py-5">
             <ul class="pt-4 w-2/3 text-violet-900 font-semibold text-xl">
               <li>
                 <a
-                  class="
-                    p-2
-                    pr-6
-                    w-full
-                    rounded-l-lg
-                    flex
-                    justify-end
-                    bg-violet-300
-                    duration-200
-                    active:bg-violet-900 active:text-violet-200
-                  "
+                  class="p-2 pr-6 w-full rounded-l-lg flex justify-end bg-violet-300 duration-200 active:bg-violet-900 active:text-violet-200 my-3 hover:bg-violet-400"
                   href="#/login"
-                  >Login</a
+                >
+                  Logout</a
+                >
+              </li>
+              <li>
+                <a
+                  class="p-2 pr-6 w-full rounded-l-lg flex justify-end bg-violet-300 duration-200 active:bg-violet-900 active:text-violet-200 my-3 hover:bg-violet-400"
+                  href="/"
+                >
+                  Profile</a
+                >
+              </li>
+              <li>
+                <a
+                  class="p-2 pr-6 w-full rounded-l-lg flex justify-end bg-violet-300 duration-200 active:bg-violet-900 active:text-violet-200 my-3 hover:bg-violet-400"
+                  href="/"
+                >
+                  Settings</a
+                >
+              </li>
+              <li>
+                <a
+                  class="p-2 pr-6 w-full rounded-l-lg flex justify-end bg-violet-300 duration-200 active:bg-violet-900 active:text-violet-200 my-3 hover:bg-violet-400"
+                  href="/"
+                >
+                  Diet</a
+                >
+              </li>
+              <li>
+                <a
+                  class="p-2 pr-6 w-full rounded-l-lg flex justify-end bg-violet-300 duration-200 active:bg-violet-900 active:text-violet-200 my-3 hover:bg-violet-400"
+                  href="/"
+                >
+                  Workout</a
                 >
               </li>
             </ul>

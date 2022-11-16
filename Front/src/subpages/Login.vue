@@ -2,26 +2,23 @@
 import axios from "axios";
 
 export default {
-  name: "Register",
   data() {
+    name: "Login";
     return {
-      name: "",
       email: "",
       password: "",
       error: "",
     };
   },
   methods: {
-    async createUser() {
+    async SiginIn() {
       var data = JSON.stringify({
-        name: this.name,
         email: this.email,
         password: this.password,
       });
-
       var config = {
         method: "post",
-        url: "http://localhost:3000/register",
+        url: "http://localhost:3000/login",
         headers: {
           "Content-Type": "application/json",
         },
@@ -30,7 +27,7 @@ export default {
 
       await axios(config)
         .then((res) => {
-          console.log(JSON.stringify(res.data));
+          console.log(res);
           window.location.href = "/";
         })
         .catch((e) => {
@@ -72,19 +69,9 @@ export default {
               </div>
               <form
                 id="form"
-                @submit.prevent="createUser()"
+                @submit.prevent="SiginIn()"
                 class="sm:p-10 p-5 pt-14 flex flex-wrap gap-5 sm:justify-center -mt-5"
               >
-                <label for="name" class="w-full ml-2 font-semibold text-black"
-                  >Name</label
-                >
-                <input
-                  type="text"
-                  placeholder="name"
-                  v-model="name"
-                  class="-mt-4 p-1 rounded-md w-full pl-3 focus:outline-none focus:border focus:border-violet-900"
-                />
-
                 <label for="email" class="w-full ml-2 font-semibold text-black"
                   >Email</label
                 >
@@ -115,9 +102,11 @@ export default {
                 </button>
               </form>
               <div class="text-center font-semibold">
-                <h4 class="text-violet-900">Already have an account?</h4>
-                <a class="text-fuchsia-500 hover:cursor-pointer" href="#/Login"
-                  >Log In!</a
+                <h4 class="text-violet-900">Don't have an account?</h4>
+                <a
+                  class="text-fuchsia-500 hover:cursor-pointer"
+                  href="#/register"
+                  >Sign Up first</a
                 >
               </div>
             </div>
@@ -132,7 +121,7 @@ export default {
               easier
             </h1>
             <img
-              src="../../yoga.png"
+              src="../../yoga2.png"
               alt="yoga position"
               class="h-96 w-96 brightness-200"
             />

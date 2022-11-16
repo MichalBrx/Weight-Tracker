@@ -1,9 +1,11 @@
 <script>
 import Home from "./subpages/Main.vue";
-import Login from "./subpages/Register.vue";
+import Register from "./subpages/Register.vue";
+import Login from "./subpages/Login.vue";
 
 const routes = {
   "/": Home,
+  "/register": Register,
   "/login": Login,
 };
 

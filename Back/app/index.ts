@@ -15,6 +15,7 @@ const cors = require("cors");
 
 const register = require("./routers/register");
 const login = require("./routers/login");
+const currentUser = require("./routers/currentUser");
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,7 @@ declare global {
 
 app.use("/", register);
 app.use("/", login);
+app.use("/", currentUser);
 
 // nie dziala
 app.post("/token", (req, res: Response) => {
