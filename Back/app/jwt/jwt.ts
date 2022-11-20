@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "async_hooks";
 import { Request, Response, NextFunction } from "express";
 import { newUser } from "../interfaces";
 
@@ -11,8 +12,13 @@ function generateAccessToken(user: any) {
 function createAccessToken(user: any, res: Response) {
   const accessToken = generateAccessToken(user);
   const refreshToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-  res.cookie("accessToken", accessToken);
-  res.status(200).json({ user: user });
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: false,
+  });
+  res.status(200).json({ user: user, token: accessToken });
 }
 
 function authenticateToken(req: Request, res: Response, next: NextFunction) {

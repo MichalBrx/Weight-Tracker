@@ -22,12 +22,13 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
         data: data,
       };
 
       await axios(config)
         .then((res) => {
-          console.log(res);
+          localStorage.setItem("token", res.data.token);
           window.location.href = "/";
         })
         .catch((e) => {

@@ -6,6 +6,8 @@ import { Response, Request } from "express";
 
 router.get("/user", (req: Request, res: Response) => {
   const token = req.cookies.accessToken;
+
+  console.log(req.cookies);
   if (!token) {
     return res.status(401).end();
   }

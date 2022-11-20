@@ -7,8 +7,7 @@ import { generateAccessToken, authenticateToken } from "./jwt/jwt";
 
 require("dotenv").config();
 
-const app = express();
-// const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -19,10 +18,18 @@ const currentUser = require("./routers/currentUser");
 
 const prisma = new PrismaClient();
 
+const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cors());
+app.use(bodyParser.json());
+
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://192.168.0.17:5173", "http://localhost:3000"],
+    Network: true,
+  })
+);
 
 declare global {
   namespace Express {

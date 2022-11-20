@@ -19,7 +19,9 @@ export default {
       <h3 class="w-full text-center text-lg font-semibold mt-3">
         Add Calories
       </h3>
-      <p>Write down what you eat to keep track of your calories</p>
+      <p class="w-full text-center">
+        Write down what you eat to keep track of your calories
+      </p>
       <div class="flex justify-center flex-wrap m-2 mb-5">
         <input
           type="text"
@@ -48,18 +50,7 @@ export default {
         />
       </div>
       <button
-        class="
-          mb-4
-          p-2
-          bg-violet-900
-          text-violet-200
-          px-10
-          font-semibold
-          rounded-md
-          max-h-10
-          duration-150
-          active:scale-110 active:bg-violet-200 active:text-violet-900
-        "
+        class="mb-4 p-2 bg-violet-900 text-violet-200 px-10 font-semibold rounded-md max-h-10 duration-150 active:scale-110 active:bg-violet-200 active:text-violet-900"
       >
         ADD
       </button>
@@ -81,19 +72,7 @@ export default {
         />
       </div>
       <button
-        class="
-          mb-4
-          p-2
-          bg-violet-900
-          text-violet-200
-          px-10
-          font-semibold
-          rounded-md
-          max-h-10
-          self-end
-          duration-200
-          active:scale-110 active:bg-violet-200 active:text-violet-900
-        "
+        class="mb-4 p-2 bg-violet-900 text-violet-200 px-10 font-semibold rounded-md max-h-10 self-end duration-200 active:scale-110 active:bg-violet-200 active:text-violet-900"
       >
         ADD
       </button>

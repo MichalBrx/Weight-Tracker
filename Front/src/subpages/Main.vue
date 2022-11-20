@@ -23,19 +23,6 @@ export default {
     },
   },
   async mounted() {
-    // async getUser() {
-    //   var config = {
-    //     method: "get",
-    //     url: "http://localhost:3000/user",
-    //   };
-    //   await axios(config)
-    //     .then((res) => {
-    //       this.info = res;
-    //     })
-    //     .catch((e) => {
-    //       console.log(e);
-    //     });
-    // },
     await axios
       .get("http://localhost:3000/user")
       .then((res) => {

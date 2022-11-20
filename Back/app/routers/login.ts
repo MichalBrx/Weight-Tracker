@@ -11,6 +11,7 @@ router.post("/login", async (req: any, res: Response) => {
 
   try {
     const user = await LogginIn(email, password);
+
     createAccessToken(user, res);
   } catch (err) {
     if (email == "" || password == "") {
