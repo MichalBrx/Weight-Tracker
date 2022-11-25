@@ -1,14 +1,14 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { Response } from "express";
-
 import { newUser } from "./interfaces";
 import { generateAccessToken, authenticateToken } from "./jwt/jwt";
 
+const jwt = require("jsonwebtoken");
+
 require("dotenv").config();
 
-const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
+// middleware
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -19,17 +19,26 @@ const currentUser = require("./routers/currentUser");
 const prisma = new PrismaClient();
 
 const app = express();
+
 app.use(cookieParser());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 app.use(
   cors({
     credentials: true,
-    origin: ["http://192.168.0.17:5173", "http://localhost:3000"],
-    Network: true,
+    optionsSuccesStatus: 200,
+    origin: ["http://0.0.0.0:5173", "http://192.168.0.17:5173"],
+    preflightContinue: false,
+    methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+    allowHeaders:
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   })
 );
+
+app.use("/", register);
+app.use("/", login);
+app.use("/", currentUser);
 
 declare global {
   namespace Express {
@@ -38,10 +47,6 @@ declare global {
     }
   }
 }
-
-app.use("/", register);
-app.use("/", login);
-app.use("/", currentUser);
 
 // nie dziala
 app.post("/token", (req, res: Response) => {

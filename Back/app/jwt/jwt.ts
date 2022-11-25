@@ -15,7 +15,7 @@ function createAccessToken(user: any, res: Response) {
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "strict",
     secure: false,
   });
   res.status(200).json({ user: user, token: accessToken });
