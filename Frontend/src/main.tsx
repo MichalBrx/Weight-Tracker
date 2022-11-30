@@ -10,9 +10,6 @@ import Loading from "./subPages/Loading";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
   QueryClient,
   QueryClientProvider,
 } from "react-query";
